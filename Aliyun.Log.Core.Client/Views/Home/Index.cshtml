@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .displayCls {
+        display: none;
+    }
+</style>
+
+<script>
+    var maingrid;
+    $(function () {
+        var form = layui.form();
+        maingrid = $("#maingrid").ligerGrid({
+            columns: [
+            { display: '订单号', name: 'OrderNo', width: 200 },
+            { display: '提交时间', name: 'PostDate', width: 140 },
+            { display: '命名空间', name: 'ClassName', width: 250 },
+            {
+                display: '消息级别', name: 'Topic', width: 70,
+                render: function (item)
+                    {
+                    if (parseInt(item.Topic) == 1) return '生产';
+                    if (parseInt(item.Topic) == 2) return '预发布';
+                    if (parseInt(item.Topic) == 3) return '测试';
+                    if (parseInt(item.Topic) == 4) return '其它';
+                    return '未知级别:' + item.Topic;
+                    } },
+            { display: '信息', name: 'Desc' },
+            { display: '更多信息', name: 'Html' }
+            ],
+            width: '98%',
+            height: '98%',
+            checkbox: false,
+            parms: $("#searchF").serializeObject(),
+            pageSize: 50,
+            fixedCellHeight: false,
+            url: "/home/SlsLogSearch"
+        });
+
+        form.on('select(ts)', function (data) {
+            if (data.value == "自定义") {
+                $(".displayCls").show();
+            } else {
+                $(".displayCls").hide();
+            }
+        });
+
+        setTimeout(query, 100);
+    })
+
+    function query() {
+        var parms = $("#searchF").serializeObject();
+        if (parms.query == "")
+        {
+            return;
+        }
+        if (parms.QueryTimeSpan == "自定义" && (parms.BeginDate == "" || parms.EndDate == ""))
+        {
+            parent.layer.msg("请输入查询时间！");
+            return;
+        }
+        maingrid.set({
+            parms: parms,
+            page: 1,
+            newPage: 1
+        });
+        maingrid.loadData();
+
+    }
+
+</script>
+
+<div class="childrenBody">
+    <form class="layui-form layui-form-pane" id="searchF">
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单号</label>
+            <div class="layui-input-inline">
+                <input type="text" value="@ViewData["query"]" name="query" id="query" placeholder="" class="layui-input">
+            </div>
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <select name="OrderBy" id="OrderBy" lay-verify="" class="layui-select">
+                    <option value="正排序" selected="selected">正排序</option>
+                    <option value="倒排序">倒排序</option>
+                </select>
+            </div>
+
+            <label class="layui-form-label">环境</label>
+            <div class="layui-input-inline">
+                <select name="Topic" id="Topic" lay-verify="" class="layui-select">
+                    <option value="1" selected="selected">生产</option>
+                    <option value="2">预发布</option>
+                    <option value="3">测试</option>
+                    <option value="4">其它</option>
+                    <option value="">全部</option>
+                </select>
+            </div>
+
+            <label class="layui-form-label">查询时间</label>
+            <div class="layui-input-inline">
+                <select name="QueryTimeSpan" id="QueryTimeSpan" lay-verify="" class="layui-select" lay-filter="ts">
+                    <option value="15分钟">15分钟</option>
+                    <option value="1小时">1小时</option>
+                    <option value="4小时">4小时</option>
+                    <option value="1天">1天</option>
+                    <option value="1周" selected="selected">1周</option>
+                    <option value="自定义">自定义</option>
+                </select>
+            </div>
+            <label class="layui-form-label displayCls">开始时间</label>
+            <div class="layui-input-inline displayCls">
+                <input value="@DateTime.Today.AddDays(-30).ToString("yyyy-MM-dd HH:mm:ss")" class="layui-input layer-date displayCls" name="BeginDate" id="BeginDate" placeholder="请输入时间" onclick="laydate({ istime: true, format: 'YYYY-MM-DD hh:mm:ss' })">
+            </div>
+            <label class="layui-form-label displayCls">结束时间</label>
+            <div class="layui-input-inline displayCls">
+                <input value="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")" class="layui-input layer-date" name="EndDate" id="EndDate" placeholder="请输入时间" onclick="laydate({ istime: true, format: 'YYYY-MM-DD hh:mm:ss' })">
+            </div>
+            <a class="layui-btn layui-btn-normal" onclick="query()">&nbsp;查&nbsp;&nbsp;&nbsp;询&nbsp;</a>
+        </div>
+    </form>
+
+    <div id="maingrid" style="margin-top:8px;padding:0"></div>
+</div>
