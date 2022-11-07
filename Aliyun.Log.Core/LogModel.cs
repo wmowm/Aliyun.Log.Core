@@ -40,5 +40,19 @@ namespace Aliyun.Log.Core
         /// </summary>
         public string Topic { get; set; } = "3";
 
+        /// <summary>
+        /// 日志级别
+        /// </summary>
+        public LogLevel Level { get; set; } = LogLevel.INFO;
+
+    }
+
+    public enum LogLevel
+    {
+        DEBUG=1,
+        INFO=2,
+        WARNING=3,
+        ERROR=4,
+        CRITICAL=5
     }
 }

@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "9cf389c6-e76b-437c-829d-c23ace6d257f": {
+      "ProjectGuid": "9cf389c6-e76b-437c-829d-c23ace6d257f",
+      "DisplayName": "Aliyun.Oss.Core",
+      "ColorIndex": 0
+    },
+    "f6b95162-3489-40d0-b3f5-ee5814d7cd88": {
+      "ProjectGuid": "f6b95162-3489-40d0-b3f5-ee5814d7cd88",
+      "DisplayName": "Aliyun.Log.Core.Client",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

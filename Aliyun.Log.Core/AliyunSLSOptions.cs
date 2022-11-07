@@ -10,5 +10,6 @@ namespace Aliyun.Log.Core
         public string AccessKey { get; set; }
         public string LogStoreName { get; set; }
         public string Topic { get; set; }
+
     }
 }

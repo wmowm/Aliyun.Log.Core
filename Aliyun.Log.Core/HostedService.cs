@@ -38,11 +38,14 @@ namespace Aliyun.Log.Core
                             if (AliyunLogBuilder.logQueue.Count>0)
                             {
                                 var log = AliyunLogBuilder.logQueue.Dequeue();
+                                var topic = string.IsNullOrEmpty(log.Topic) ? _options.Value.Topic : log.Topic;
                                 var logInfo = new LogInfo
                                 {
+                                    
                                     Contents =
                                 {
-                                    {"Topic", log.Topic.ToString()},
+                                    {"Topic", topic},
+                                    {"Level", log.Level.ToString()},
                                     {"OrderNo", log.OrderNo},
                                     {"ClassName", log.ClassName},
                                     { "Desc",log.Desc},

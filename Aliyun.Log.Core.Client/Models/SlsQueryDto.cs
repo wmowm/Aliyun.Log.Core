@@ -28,10 +28,14 @@ namespace Aliyun.Log.Core.Client.Models
         /// </summary>
         public string Html { get; set; }
         /// <summary>
-        /// 日志级别
+        /// 日志主题
         /// </summary>
         public string Topic { get; set; }
 
+        /// <summary>
+        /// 日志级别
+        /// </summary>
+        public string Level { get; set; }
 
         public uint Time { get; set; }
     }

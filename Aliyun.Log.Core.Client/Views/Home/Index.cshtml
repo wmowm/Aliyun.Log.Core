@@ -18,15 +18,23 @@
             { display: '提交时间', name: 'PostDate', width: 140 },
             { display: '命名空间', name: 'ClassName', width: 250 },
             {
-                display: '消息级别', name: 'Topic', width: 70,
+                display: '消息主题', name: 'Topic', width: 70,
                 render: function (item)
                     {
-                    if (parseInt(item.Topic) == 1) return '生产';
-                    if (parseInt(item.Topic) == 2) return '预发布';
-                    if (parseInt(item.Topic) == 3) return '测试';
-                    if (parseInt(item.Topic) == 4) return '其它';
-                    return '未知级别:' + item.Topic;
-                    } },
+                    if (parseInt(item.Topic) == 1) return '生产环境';
+                    if (parseInt(item.Topic) == 2) return '预发布环境';
+                    if (parseInt(item.Topic) == 3) return 'it环境';
+                    if (parseInt(item.Topic) == 4) return '本地环境';
+                    if (parseInt(item.Topic) == 5) return '其它环境';
+                    return '未知主题:' + item.Topic;
+                    }
+                },
+                {
+                    display: '日志级别', name: 'Level', width: 70,
+                    render: function (item) {
+                        return item.Level;
+                    }
+                },
             { display: '信息', name: 'Desc' },
             { display: '更多信息', name: 'Html' }
             ],
@@ -90,10 +98,25 @@
             <label class="layui-form-label">环境</label>
             <div class="layui-input-inline">
                 <select name="Topic" id="Topic" lay-verify="" class="layui-select">
-                    <option value="1" selected="selected">生产</option>
-                    <option value="2">预发布</option>
-                    <option value="3">测试</option>
-                    <option value="4">其它</option>
+                    <option value="" selected="selected">全部</option>
+                    <option value="1">生产环境</option>
+                    <option value="2">预发布环境</option>
+                    <option value="3">it环境</option>
+                    <option value="4">本地环境</option>
+                    <option value="5">其它环境</option>
+                    <option value="">全部</option>
+                </select>
+            </div>
+
+            <label class="layui-form-label">日志级别</label>
+            <div class="layui-input-inline">
+                <select name="Level" id="Level" lay-verify="" class="layui-select">
+                    <option value="" selected="selected">全部</option>
+                    <option value="DEBUG">DEBUG</option>
+                    <option value="INFO">INFO</option>
+                    <option value="WARNING">WARNING</option>
+                    <option value="ERROR">ERROR</option>
+                    <option value="CRITICAL">CRITICAL</option>
                     <option value="">全部</option>
                 </select>
             </div>

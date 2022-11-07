@@ -40,7 +40,7 @@ namespace Aliyun.Log.Core.Client.Controllers
         /// <param name="BeginDate"></param>
         /// <param name="EndDate"></param>
         /// <returns></returns>
-        public async Task<ActionResult> SlsLogSearch(int pagesize, int page, string query, string OrderBy,string Topic, string QueryTimeSpan, DateTime? BeginDate, DateTime? EndDate)
+        public async Task<ActionResult> SlsLogSearch(int pagesize, int page, string query, string OrderBy,string Topic,string level, string QueryTimeSpan, DateTime? BeginDate, DateTime? EndDate)
         {
             if (string.IsNullOrEmpty(QueryTimeSpan) || string.IsNullOrEmpty(query) || pagesize == 0 || page == 0)
             {
@@ -49,6 +49,10 @@ namespace Aliyun.Log.Core.Client.Controllers
             if (QueryTimeSpan == "自定义" && (!BeginDate.HasValue || !EndDate.HasValue))
             {
                 return Json("");
+            }
+            if (!string.IsNullOrEmpty(level)) 
+            {
+                query += $" & {level}";
             }
             TimeSpan ts;
             switch (QueryTimeSpan)
@@ -120,15 +124,21 @@ namespace Aliyun.Log.Core.Client.Controllers
             {
                 foreach (var item in res2.Result.Logs)
                 {
+                    //自定义元素,可能不存在
+                    var myLevel = item.ContainsKey("Level") ? item["Level"]:"";
+
+
+
                     var model = new SlsQueryDto()
                     {
                         ClassName = item["ClassName"],
                         Desc = HttpUtility.HtmlEncode(item["Desc"]),
                         Html = HttpUtility.HtmlEncode(item["Html"]),
-                        Topic = item["Topic"],
+                        Topic = item["__topic__"],
                         OrderNo = item["OrderNo"],
                         PostDate = item["PostDate"],
-                        Time = uint.Parse(item["__time__"])
+                        Time = uint.Parse(item["__time__"]),
+                        Level = myLevel,
                     };
                     list.Add(model);
                 }
@@ -158,10 +168,17 @@ namespace Aliyun.Log.Core.Client.Controllers
                 Desc = "6666666666xxxxxx",
                 Html = "99999999999xxxxx",
                 Topic = topic,
-                OrderNo = Guid.NewGuid().ToString("N"),
-                PostDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                OrderNo = "test0000001",
+                PostDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                Level = LogLevel.ERROR
             };
+
+            //提交方法A
             await _aliyunLogClient.Log(logModel);
+
+            //提交方法B
+            await _aliyunLogClient.Log(logModel.OrderNo, logModel.Desc);
+
             return Json("0");
         }
 
